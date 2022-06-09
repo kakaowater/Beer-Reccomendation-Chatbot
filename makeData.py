@@ -46,7 +46,7 @@ def slots_txt(filename):
             line = line.replace("{4}", rnd_taste).strip()
             
             
-            #if (ord(rnd_types[-2])-ord('가')) % 28 == 4 or 8: # 4면 받침이 ㄴ, 8이면 ㄹ
+            # (ord(rnd_types[-2])-ord('가')) % 28 == 4 or 8: # 4면 받침이 ㄴ, 8이면 ㄹ
             if 44032 <= ord(rnd_types[-2]) <= 55203 and (ord(rnd_types[-2]) - ord("가")) % 28 > 0:   
                 line = line.replace(rnd_types+'면', rnd_types+'이면')
                 line = line.replace(rnd_types+'가', rnd_types+'이')
