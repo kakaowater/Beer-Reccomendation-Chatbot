@@ -57,10 +57,11 @@ class BertSlotModel:
             n_tune_layers=self.num_bert_fine_tune_layers,
             bert_path = self.bert_hub_path,
             name='KorBertLayer')(bert_inputs)
-    
-###################################### TODO 레이어 추가해 보기 ############################################
+
+        
+        hidden1 = Dense(256, activation='relu')(bert_sequence_output)
+        hidden2 = Dense(128, activation='relu')(hidden1)
         slots_output = TimeDistributed(Dense(self.slots_num, activation='softmax'))(bert_sequence_output)
-###########################################################################################################
 
         print('slots output :', slots_output.shape)
 
@@ -107,20 +108,7 @@ class BertSlotModel:
             slots = [x[1:-1] for x in slots]
             y_slots = np.array([[x for x in y_slots[i][1:(len(slots[i])+1)]] for i in range(y_slots.shape[0])])
        
-
-##################################################### TODO ################################################################
-        slots_score = [[None]*len(slots[i]) for i in range(y_slots.shape[0])]
-# 지금은 slots_score가 None으로 이루어진 행렬입니다. 아래의 예시를 바탕으로 y_slots를 이용하여 slots_score를 만들어보세요.
-# 예시)
-#           입력 문장: 아이유 노래 재생
-#           토크나이즈 된 문장: ['아이유_ / 노래_ / 재 / 생_']
-#           slots : [['아티스트', 'O', 'O', 'O']]
-#           y_slots : [[[0.00003171 0.00454775 0.9950228  0.00019214 0.00020573]
-#                       [0.00000268 0.9998349  0.00004407 0.00001392 0.00010439]
-#                       [0.00000056 0.9999397  0.00002303 0.00000644 0.00003024]
-#                       [0.00000094 0.99993575 0.00002988 0.00001607 0.00001725]]]
-#           slots_score : [[0.9950228  0.9998349  0.9999397  0.99993575]] -> 각 토큰의 슬롯에 대한 확률
-###########################################################################################################################
+        slots_score = np.array([[np.max(Slot) for Slot in y_slots[i]] for i in range(y_slots.shape[0])])
         
         return slots, slots_score
 
